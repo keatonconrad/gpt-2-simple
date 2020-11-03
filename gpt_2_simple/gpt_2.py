@@ -295,12 +295,12 @@ def finetune(sess,
     print('Dataset has', data_sampler.total_size, 'tokens')
     print('Training...')
 
-        if val_every > 0:
-            # Sample from validation set once with fixed seed to make
-            # it deterministic during training as well as across runs.
-            val_data_sampler = Sampler(val_chunks)
-            val_batches = [[val_data_sampler.sample(1024) for _ in range(val_batch_size)]
-                           for _ in range(val_batch_count)]
+    if val_every > 0:
+        # Sample from validation set once with fixed seed to make
+        # it deterministic during training as well as across runs.
+        val_data_sampler = Sampler(val_chunks)
+        val_batches = [[val_data_sampler.sample(1024) for _ in range(val_batch_size)]
+                       for _ in range(val_batch_count)]
 
     counter = 1
     counter_path = os.path.join(checkpoint_path, 'counter')
