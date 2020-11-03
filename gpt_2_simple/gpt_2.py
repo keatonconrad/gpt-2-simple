@@ -219,7 +219,7 @@ def finetune(sess,
             labels=context[:, 1:], logits=output['logits'][:, :-1]))
 
     if val_every > 0:
-        val_context = tf.placeholder(tf.int32, [val_batch_size, None])
+        val_context = tf.compat.v1.placeholder(tf.int32, [val_batch_size, None])
         val_output = model.model(hparams=hparams, X=val_context)
         val_loss = tf.reduce_mean(
             input_tensor=tf.nn.sparse_softmax_cross_entropy_with_logits(
