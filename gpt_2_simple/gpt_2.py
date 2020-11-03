@@ -348,7 +348,7 @@ def finetune(sess,
     def validation():
         print('Calculating validation loss...')
         losses = []
-        for batch in tqdm.tqdm(val_batches):
+        for batch in tqdm(val_batches):
             losses.append(sess.run(val_loss, feed_dict={val_context: batch}))
         v_val_loss = np.mean(losses)
         v_summary = sess.run(val_loss_summary, feed_dict={val_loss: v_val_loss})
