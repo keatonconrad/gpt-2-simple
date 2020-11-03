@@ -9,11 +9,11 @@ class HParams():
         self.n_embd = n_embd
         self.n_head = n_head
         self.n_layer = n_layer
-        
+
     def override_from_dict(self, param_dict):
         try:
             self.n_vocab = param_dict['n_vocab']
-        except: 
+        except:
             pass
         try:
             self.n_ctx = param_dict['n_ctx']
@@ -174,7 +174,7 @@ def positions_for(tokens, past_length):
     return expand_tile(past_length + tf.range(nsteps), batch_size)
 
 
-def model(hparams, X, past=None, scope='model', gpus=[], reuse=False):
+def model(hparams, X, past=None, scope='model', gpus=[], reuse=tf.AUTO_REUSE):
     with tf.compat.v1.variable_scope(scope, reuse=reuse):
         results = {}
         batch, sequence = shape_list(X)
