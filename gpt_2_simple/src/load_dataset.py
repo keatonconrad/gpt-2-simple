@@ -2,14 +2,21 @@ import glob
 import numpy as np
 import os
 import random
-import tensorflow as tf
 import tqdm
 import csv
 
 
 def load_dataset(enc, path, combine):
+    "Path can be either filepath, directory, glob, or Python list"
+
+    start_token = '<|startoftext|>'
+    end_token = '<|endoftext|>'
+
     paths = []
-    if os.path.isfile(path):
+
+    if isinstance(path, list):
+        paths.append(path)
+    elif os.path.isfile(path):
         # Simple file
         paths.append(path)
     elif os.path.isdir(path):
@@ -24,19 +31,20 @@ def load_dataset(enc, path, combine):
     token_chunks = []
     raw_text = ''
     for path in tqdm.tqdm(paths):
-        if path.endswith('.npz'):
+        if isinstance(path, list):
+            for item in path:
+                raw_text += start_token + ' ' + item + ' ' + end_token + '\n'
+        elif path.endswith('.npz'):
             # Pre-encoded
             with np.load(path) as npz:
                 for item in npz.files:
                     token_chunks.append(npz[item])
         elif path.endswith('.csv'):
-            start_token = "<|startoftext|>"
-            end_token = "<|endoftext|>"
             with open(path, 'r', encoding='utf8', errors='ignore') as fp:
                 fp.readline()   # skip header
                 reader = csv.reader(fp)
                 for row in reader:
-                    raw_text += start_token + row[0] + end_token + "\n"
+                    raw_text += start_token + row[0] + end_token + '\n'
         else:
             # Plain text
             with open(path, 'r', encoding='utf8', errors='ignore') as fp:
@@ -46,7 +54,7 @@ def load_dataset(enc, path, combine):
                 token_chunks.append(tokens)
                 raw_text = ''
             else:
-                raw_text += '<|endoftext|>'
+                raw_text += end_token
     if raw_text:
         tokens = np.stack(enc.encode(raw_text))
         token_chunks.append(tokens)
