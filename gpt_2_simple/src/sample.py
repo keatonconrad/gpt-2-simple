@@ -1,5 +1,4 @@
 import tensorflow as tf
-
 from gpt_2_simple.src import model
 
 
@@ -29,8 +28,9 @@ def top_p_logits(logits, p):
         probs_sort = tf.nn.softmax(logits_sort)
         probs_sums = tf.cumsum(probs_sort, axis=1, exclusive=True)
         logits_masked = tf.compat.v1.where(probs_sums < p, logits_sort, tf.ones_like(
-            logits_sort)*1000)  # [batchsize, vocab]
-        min_logits = tf.reduce_min(input_tensor=logits_masked, axis=1, keepdims=True)  # [batchsize, 1]
+            logits_sort) * 1000)  # [batchsize, vocab]
+        min_logits = tf.reduce_min(input_tensor=logits_masked, axis=1,
+                                   keepdims=True)  # [batchsize, 1]
         return tf.compat.v1.where(
             logits < min_logits,
             tf.ones_like(logits, dtype=logits.dtype) * -1e10,

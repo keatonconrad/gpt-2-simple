@@ -60,6 +60,7 @@ def download_file_with_progress(url_base, sub_dir, model_name, file_name):
                 f.write(chunk)
                 pbar.update(DOWNLOAD_CHUNK_SIZE)
 
+
 def download_gpt2(model_dir='models', model_name='124M'):
     """Downloads the GPT-2 model into the current directory
     from Google Cloud Storage.
@@ -128,7 +129,8 @@ def get_available_gpus():
 def randomize(context, hparams, p):
     if p > 0:
         mask = tf.random.uniform(shape=tf.shape(context)) < p
-        noise = tf.random.uniform(shape=tf.shape(context), minval=0, maxval=hparams.n_vocab, dtype=tf.int32)
+        noise = tf.random.uniform(shape=tf.shape(context), minval=0,
+                                  maxval=hparams.n_vocab, dtype=tf.int32)
         return tf.where(mask, noise, context)
     else:
         return context
@@ -225,7 +227,6 @@ def finetune(sess,
             input_tensor=tf.nn.sparse_softmax_cross_entropy_with_logits(
                 labels=val_context[:, 1:], logits=val_output['logits'][:, :-1]))
         val_loss_summary = tf.compat.v1.summary.scalar('val_loss', val_loss)
-
 
     tf_sample = sample.sample_sequence(
         hparams=hparams,
