@@ -191,7 +191,7 @@ def positions_for(tokens, past_length):
     return expand_tile(past_length + tf.range(nsteps), batch_size)
 
 
-def model(hparams, X, past=None, scope='model', gpus=[], reuse=tf.AUTO_REUSE):
+def model(hparams, X, past=None, scope='model', gpus=[], reuse=tf.compat.v1.AUTO_REUSE):
     with tf.compat.v1.variable_scope(scope, reuse=reuse):
         results = {}
         batch, sequence = shape_list(X)
